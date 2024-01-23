@@ -1,0 +1,26 @@
+model
+{
+    for (i in 1:n) {
+        y[i] ~ dnorm(y.hat[i], tau.y)
+        y.hat[i] <- mu + a[cities[i]] + b[chronic_measures[i]]
+    }
+    tau.y <- pow(sigma.y, -2)
+    sigma.y ~ dunif(0.00000E+00, 100)
+    mu ~ dnorm(0.00000E+00, 1.00000E-04)
+    for (j in 1:k_city) {
+        a[j] ~ dnorm(g.a0, tau.a)
+        e.a[j] <- a[j] - mean(a[])
+    }
+    sd.a <- sd(e.a[])
+    g.a0 ~ dnorm(0.00000E+00, 1.00000E-05)
+    sigma.a ~ dunif(0.00000E+00, 100)
+    tau.a <- pow(sigma.a, 2)
+    for (k in 1:j_ch) {
+        b[k] ~ dnorm(g.b0, tau.b)
+        e.b[k] <- b[k] - mean(b[])
+    }
+    sd.b <- sd(e.b[])
+    g.b0 ~ dnorm(0.00000E+00, 1.00000E-05)
+    sigma.b ~ dunif(0.00000E+00, 100)
+    tau.b <- pow(sigma.b, 2)
+}

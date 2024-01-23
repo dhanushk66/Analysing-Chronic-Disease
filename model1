@@ -1,0 +1,32 @@
+model
+{
+    for (i in 1:n) {
+        y[i] ~ dnorm(y.hat[i], tau.y)
+        y.hat[i] <- a[cities[i]] + b[cities[i]] * chronic_measures[i]
+        e.y[i] <- y[i] - y.hat[i]
+    }
+    c ~ dnorm(0.00000E+00, 1.00000E-04)
+    sd.y <- sd(e.y[])
+    tau.y <- pow(sigma.y, -2)
+    sigma.y ~ dunif(0.00000E+00, 100)
+    for (j in 1:k_city) {
+        a[j] ~ dnorm(a_hat[j], Tau.B[1, 1])
+        b[j] ~ dnorm(b_hat[j], Tau.B[2, 2])
+        a_hat[j] <- g.a0
+        b_hat[j] <- g.b0
+        e.a[j] <- a[j] - a_hat[j]
+        e.b[j] <- b[j] - b_hat[j]
+    }
+    sd.a <- sd(e.a[])
+    sd.b <- sd(e.b[])
+    g.a0 ~ dnorm(0.00000E+00, 1.00000E-04)
+    g.b0 ~ dnorm(0.00000E+00, 1.00000E-04)
+    Tau.B[1:2, 1:2] <- inverse(Sigma.B[, ])
+    Sigma.B[1, 1] <- pow(sigma.a, 2)
+    sigma.a ~ dunif(0.00000E+00, 100)
+    Sigma.B[2, 2] <- pow(sigma.b, 2)
+    sigma.b ~ dunif(0.00000E+00, 100)
+    Sigma.B[1, 2] <- rho * sigma.a * sigma.b
+    Sigma.B[2, 1] <- Sigma.B[1, 2]
+    rho ~ dunif(-1, 1)
+}
